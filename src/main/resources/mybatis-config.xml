@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 开启驼峰命名自动映射 (数据库下划线 -> Java驼峰) -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 开启延迟加载 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!-- 开启缓存 -->
+        <setting name="cacheEnabled" value="true"/>
+        <!-- 日志实现 -->
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <!-- 类型别名 (显式声明, 避免VFS包扫描与Tomcat 9+JDK21不兼容) -->
+    <typeAliases>
+        <typeAlias type="com.sportsstore.pojo.User" alias="User"/>
+        <typeAlias type="com.sportsstore.pojo.Address" alias="Address"/>
+        <typeAlias type="com.sportsstore.pojo.Category" alias="Category"/>
+        <typeAlias type="com.sportsstore.pojo.Product" alias="Product"/>
+        <typeAlias type="com.sportsstore.pojo.Cart" alias="Cart"/>
+        <typeAlias type="com.sportsstore.pojo.Order" alias="Order"/>
+        <typeAlias type="com.sportsstore.pojo.OrderItem" alias="OrderItem"/>
+        <typeAlias type="com.sportsstore.pojo.Carousel" alias="Carousel"/>
+    </typeAliases>
+
+    <!-- 分页插件 -->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <property name="helperDialect" value="mysql"/>
+            <property name="reasonable" value="true"/>
+            <property name="supportMethodsArguments" value="true"/>
+            <property name="params" value="count=countSql"/>
+        </plugin>
+    </plugins>
+</configuration>

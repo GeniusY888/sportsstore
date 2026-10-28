@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sportsstore.mapper.ReviewMapper">
+
+    <resultMap id="ReviewResultMap" type="com.sportsstore.pojo.Review">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="product_id" property="productId"/>
+        <result column="rating" property="rating"/>
+        <result column="content" property="content"/>
+        <result column="create_time" property="createTime"/>
+        <association property="user" javaType="com.sportsstore.pojo.User">
+            <id column="u_id" property="id"/>
+            <result column="u_username" property="username"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.sportsstore.pojo.Review">
+        INSERT INTO review (user_id, product_id, rating, content, create_time)
+        VALUES (#{userId}, #{productId}, #{rating}, #{content}, NOW())
+    </insert>
+
+    <select id="findByProductId" resultMap="ReviewResultMap">
+        SELECT r.*, u.id AS u_id, u.username AS u_username
+        FROM review r
+        LEFT JOIN user u ON r.user_id = u.id
+        WHERE r.product_id = #{productId}
+        ORDER BY r.create_time DESC
+    </select>
+
+    <select id="findAll" resultMap="ReviewResultMap">
+        SELECT r.*, u.id AS u_id, u.username AS u_username, p.name AS p_name
+        FROM review r
+        LEFT JOIN user u ON r.user_id = u.id
+        LEFT JOIN product p ON r.product_id = p.id
+        ORDER BY r.create_time DESC
+    </select>
+
+    <select id="countByProductId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM review WHERE product_id = #{productId}
+    </select>
+
+    <select id="avgRatingByProductId" resultType="java.lang.Double">
+        SELECT AVG(rating) FROM review WHERE product_id = #{productId}
+    </select>
+
+    <select id="findById" resultMap="ReviewResultMap">
+        SELECT r.*, u.id AS u_id, u.username AS u_username
+        FROM review r
+        LEFT JOIN user u ON r.user_id = u.id
+        WHERE r.id = #{id}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM review WHERE id = #{id}
+    </delete>
+
+    <select id="countByUserIdAndProductId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM review WHERE user_id = #{userId} AND product_id = #{productId}
+    </select>
+
+</mapper>

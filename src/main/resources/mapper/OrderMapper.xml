@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sportsstore.mapper.OrderMapper">
+
+    <!-- ==================== 订单主表 ==================== -->
+    <resultMap id="orderMap" type="Order">
+        <id property="id" column="id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="userId" column="user_id"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="status" column="status"/>
+        <result property="receiverName" column="receiver_name"/>
+        <result property="receiverPhone" column="receiver_phone"/>
+        <result property="receiverAddress" column="receiver_address"/>
+        <result property="remark" column="remark"/>
+        <result property="payTime" column="pay_time"/>
+        <result property="shipTime" column="ship_time"/>
+        <result property="completeTime" column="complete_time"/>
+        <result property="cancelTime" column="cancel_time"/>
+        <result property="createTime" column="create_time"/>
+        <!-- 关联用户 -->
+        <association property="user" column="user_id"
+                     select="com.sportsstore.mapper.UserMapper.findById"/>
+        <!-- 关联订单明细 -->
+        <collection property="orderItems" column="id"
+                    select="findItemsByOrderId"/>
+    </resultMap>
+
+    <insert id="insertOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `order` (order_no, user_id, total_amount, status,
+                             receiver_name, receiver_phone, receiver_address, remark)
+        VALUES (#{orderNo}, #{userId}, #{totalAmount}, #{status},
+                #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{remark})
+    </insert>
+
+    <update id="updateStatus">
+        UPDATE `order` SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="payOrder">
+        UPDATE `order` SET status = 1, pay_time = #{payTime} WHERE id = #{id} AND status = 0
+    </update>
+
+    <update id="shipOrder">
+        UPDATE `order` SET status = 2, ship_time = #{shipTime} WHERE id = #{id} AND status = 1
+    </update>
+
+    <update id="completeOrder">
+        UPDATE `order` SET status = 3, complete_time = #{completeTime} WHERE id = #{id} AND status = 2
+    </update>
+
+    <update id="cancelOrder">
+        UPDATE `order` SET status = 4, cancel_time = #{cancelTime} WHERE id = #{id} AND status = 0
+    </update>
+
+    <select id="findById" resultMap="orderMap">
+        SELECT * FROM `order` WHERE id = #{id}
+    </select>
+
+    <select id="findByOrderNo" resultMap="orderMap">
+        SELECT * FROM `order` WHERE order_no = #{orderNo}
+    </select>
+
+    <select id="findByUserId" resultMap="orderMap">
+        SELECT * FROM `order` WHERE user_id = #{userId} ORDER BY create_time DESC
+    </select>
+
+    <select id="findAll" resultMap="orderMap">
+        SELECT * FROM `order`
+        <where>
+            <if test="status != null">AND status = #{status}</if>
+            <if test="orderNo != null and orderNo != ''">AND order_no LIKE CONCAT('%', #{orderNo}, '%')</if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- ==================== 订单明细 ==================== -->
+    <resultMap id="orderItemMap" type="OrderItem">
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="productImage" column="product_image"/>
+        <result property="productPrice" column="product_price"/>
+        <result property="spec" column="spec"/>
+        <result property="quantity" column="quantity"/>
+        <result property="subtotal" column="subtotal"/>
+    </resultMap>
+
+    <insert id="insertOrderItems">
+        INSERT INTO `order_item` (order_id, product_id, product_name, product_image,
+                                  product_price, spec, quantity, subtotal)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{item.orderId}, #{item.productId}, #{item.productName}, #{item.productImage},
+             #{item.productPrice}, #{item.spec}, #{item.quantity}, #{item.subtotal})
+        </foreach>
+    </insert>
+
+    <select id="findItemsByOrderId" resultMap="orderItemMap">
+        SELECT * FROM `order_item` WHERE order_id = #{orderId}
+    </select>
+</mapper>

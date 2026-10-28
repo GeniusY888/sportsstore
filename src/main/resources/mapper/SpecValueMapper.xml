@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sportsstore.mapper.SpecValueMapper">
+
+    <resultMap id="SpecValueResultMap" type="com.sportsstore.pojo.SpecValue">
+        <id column="id" property="id"/>
+        <result column="group_id" property="groupId"/>
+        <result column="value" property="value"/>
+        <result column="sort_order" property="sortOrder"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="findByGroupId" resultMap="SpecValueResultMap">
+        SELECT * FROM spec_value WHERE group_id = #{groupId} ORDER BY sort_order ASC
+    </select>
+
+    <insert id="insert" parameterType="com.sportsstore.pojo.SpecValue">
+        INSERT INTO spec_value (group_id, value, sort_order)
+        VALUES (#{groupId}, #{value}, #{sortOrder})
+    </insert>
+
+    <update id="update" parameterType="com.sportsstore.pojo.SpecValue">
+        UPDATE spec_value SET group_id = #{groupId}, value = #{value}, sort_order = #{sortOrder}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM spec_value WHERE id = #{id}
+    </delete>
+
+</mapper>

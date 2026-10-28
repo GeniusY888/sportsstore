@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sportsstore.mapper.ProductMapper">
+
+    <resultMap id="productMap" type="Product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="image" column="image"/>
+        <result property="images" column="images"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="status" column="status"/>
+        <result property="salesVolume" column="sales_volume"/>
+        <result property="isHot" column="is_hot"/>
+        <result property="isNew" column="is_new"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <!-- 关联分类 -->
+        <association property="category" column="category_id"
+                     select="com.sportsstore.mapper.CategoryMapper.findById"/>
+    </resultMap>
+
+    <select id="findAllOnSale" resultMap="productMap">
+        SELECT * FROM `product` WHERE status = 1 ORDER BY create_time DESC
+    </select>
+
+    <select id="findById" resultMap="productMap">
+        SELECT * FROM `product` WHERE id = #{id}
+    </select>
+
+    <select id="findByCategoryId" resultMap="productMap">
+        SELECT * FROM `product` WHERE category_id = #{categoryId} AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="searchByName" resultMap="productMap">
+        SELECT * FROM `product` WHERE name LIKE CONCAT('%', #{keyword}, '%') AND status = 1
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="findHot" resultMap="productMap">
+        SELECT * FROM `product` WHERE status = 1 AND is_hot = 1
+        ORDER BY sales_volume DESC LIMIT #{limit}
+    </select>
+
+    <select id="findNew" resultMap="productMap">
+        SELECT * FROM `product` WHERE status = 1 AND is_new = 1
+        ORDER BY create_time DESC LIMIT #{limit}
+    </select>
+
+    <!-- ==================== 管理员 ==================== -->
+    <select id="findAll" resultMap="productMap">
+        SELECT * FROM `product` ORDER BY create_time DESC
+    </select>
+
+    <select id="findByCondition" resultMap="productMap">
+        SELECT * FROM `product`
+        <where>
+            <if test="name != null and name != ''">AND name LIKE CONCAT('%', #{name}, '%')</if>
+            <if test="categoryId != null">AND category_id = #{categoryId}</if>
+            <if test="status != null">AND status = #{status}</if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <insert id="insert" parameterType="Product" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `product` (name, description, price, stock, image, images,
+                               category_id, status, is_hot, is_new)
+        VALUES (#{name}, #{description}, #{price}, #{stock}, #{image}, #{images},
+                #{categoryId}, COALESCE(#{status}, 1), COALESCE(#{isHot}, 0), COALESCE(#{isNew}, 0))
+    </insert>
+
+    <update id="update" parameterType="Product">
+        UPDATE `product`
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="stock != null">stock = #{stock},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="images != null">images = #{images},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="isHot != null">is_hot = #{isHot},</if>
+            <if test="isNew != null">is_new = #{isNew},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE `product` SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="updateStock">
+        UPDATE `product` SET stock = stock + #{stock} WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM `product` WHERE id = #{id}
+    </delete>
+
+    <update id="updateSalesVolume">
+        UPDATE `product` SET sales_volume = sales_volume + #{amount} WHERE id = #{id}
+    </update>
+</mapper>

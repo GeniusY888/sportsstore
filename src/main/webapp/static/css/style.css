@@ -1,0 +1,185 @@
+/* ============================================================
+   SportsStore 体育用品商城 - 自定义样式
+   ============================================================ */
+
+/* ==================== 通用 ==================== */
+body {
+    font-family: "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+}
+
+a { color: #333; }
+a:hover { color: #ff6b35; text-decoration: none; }
+
+/* ==================== 导航栏 ==================== */
+.navbar-default .navbar-nav > li > a:hover {
+    color: #ff6b35 !important;
+}
+.navbar-form .form-control:focus {
+    border-color: #ff6b35;
+    box-shadow: 0 0 5px rgba(255,107,53,0.3);
+}
+
+/* ==================== 轮播图 ==================== */
+.carousel-inner {
+    border-radius: 0;
+}
+.carousel-caption {
+    background: linear-gradient(transparent, rgba(0,0,0,0.5));
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+.carousel-caption h3 {
+    margin: 5px 0;
+    font-size: 24px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* ==================== 区块标题 ==================== */
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ff6b35;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.section-title h3 {
+    margin: 0;
+    color: #333;
+}
+
+/* ==================== 商品卡片 ==================== */
+.product-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.product-card a { text-decoration: none; color: inherit; }
+
+.product-img {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #fafafa;
+}
+.product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+.product-card:hover .product-img img {
+    transform: scale(1.05);
+}
+
+.product-info {
+    padding: 12px 15px;
+}
+.product-name {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.product-price {
+    margin-bottom: 8px;
+}
+.price-current {
+    font-size: 18px;
+    color: #ff6b35;
+    font-weight: bold;
+}
+.product-meta {
+    font-size: 12px;
+    color: #999;
+}
+
+/* ==================== 徽章 ==================== */
+.badge-hot {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ff6b35;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.badge-new {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #28a745;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* ==================== 购物车 ==================== */
+.table > tbody > tr > td {
+    vertical-align: middle !important;
+}
+
+/* ==================== 分页 active 颜色 ==================== */
+.pagination > .active > a {
+    background-color: #ff6b35;
+    border-color: #ff6b35;
+}
+.pagination > .active > a:hover {
+    background-color: #e55d2b;
+    border-color: #e55d2b;
+}
+
+/* ==================== 后台侧边栏 ==================== */
+.sidebar .nav-pills > li > a:hover {
+    background: #34495e !important;
+}
+.sidebar .nav-pills > li.active > a {
+    background: #ff6b35 !important;
+}
+
+/* ==================== 按钮覆写 ==================== */
+.btn-primary {
+    background: #1a1a2e;
+    border-color: #1a1a2e;
+}
+.btn-primary:hover {
+    background: #2c3e50;
+    border-color: #2c3e50;
+}
+
+/* ==================== 面板 ==================== */
+.panel-default > .panel-heading {
+    background: #f8f9fa;
+}
+
+/* ==================== 表单 ==================== */
+.form-control:focus {
+    border-color: #ff6b35;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 6px rgba(255,107,53,.3);
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 768px) {
+    .product-img {
+        height: 160px;
+    }
+    .carousel-inner img {
+        height: 250px !important;
+    }
+}
